@@ -1,0 +1,32 @@
+{
+  "name": "NearWorld",
+  "version": "0.0.1",
+  "description": "This project can be use as a starting point for developing your new NEAR SubQuery project",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "subql build",
+    "codegen": "subql codegen",
+    "start:docker": "docker-compose pull && docker-compose up --remove-orphans",
+    "dev": "subql codegen && subql build && docker-compose pull && docker-compose up --remove-orphans",
+    "prepack": "rm -rf dist && npm run build",
+    "test": "jest"
+  },
+  "homepage": "https://github.com/subquery/near-subql-starter",
+  "repository": "github:subquery/near-subql-starter",
+  "files": [
+    "dist",
+    "schema.graphql",
+    "project.yaml"
+  ],
+  "author": "Near Team",
+  "license": "MIT",
+  "dependencies": {
+    "@subql/common": "latest",
+    "@subql/types-near": "latest",
+    "assert": "^2.0.0"
+  },
+  "devDependencies": {
+    "@subql/cli": "latest",
+    "typescript": "4.5.5"
+  }
+}
