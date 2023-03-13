@@ -24,10 +24,10 @@ network:
   endpoint: https://archival-rpc.mainnet.near.org
   # Optionally provide the HTTP endpoint of a full chain dictionary to speed up processing
   dictionary: https://api.subquery.network/sq/subquery/near-dictionary
-  bypassBlocks: [ 81003306 ]     
+  bypassBlocks: [81003306]
 dataSources:
   - kind: near/Runtime
-    startBlock: 80980000 # You can set any start block you want here. This block was when the sweat_welcome.near address was created
+    startBlock: 87014001 # You can set any start block you want here. This block was when the sweat_welcome.near address was created
     mapping:
       file: "./dist/index.js"
       handlers:
@@ -36,11 +36,6 @@ dataSources:
         #   kind: near/BlockHandler
         #   filter:
         #     modulo: 10
-        - handler: handleTransaction
-          kind: near/TransactionHandler
-          filter:
-            sender: sweat_welcome.near
-            receiver: token.sweat
         - handler: handleAction
           kind: near/ActionHandler
           filter:

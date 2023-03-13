@@ -6,10 +6,6 @@ import {
   Transfer,
 } from "@subql/types-near";
 
-
-const decode = (str: string):string => Buffer.from(str, 'base64').toString('binary');
-const encode = (str: string):string => Buffer.from(str, 'binary').toString('base64');
-
 export async function handleBlock(block: NearBlock): Promise<void> {
   logger.info(`Handling block ${block.header.height}`);
 
@@ -37,21 +33,32 @@ export async function handleTransaction(
   await transactionRecord.save();
 }
 
-export async function handleAction(
-  //action: NearAction<Transfer>
-  action: NearAction
-): Promise<void> {
-  logger.info(`Handling action at ${action.transaction.block_height}`);
-  const strJson = decode(action.action.args);
+export async function handleAction(action: NearAction): Promise<void> {
+  // An Action can belong to either a transaction or a receipt
+  // To check which one, we can check if action.transaction is null
+  // If it is null, then it belongs to a receipt
   logger.info(
-      `Handling new handleAction ${action.action.args} ==> ${strJson} at ${action.transaction.block_height}`
-    );
+    `Handling action at ${
+      action.transaction
+        ? action.transaction.block_height
+        : action.receipt.block_height
+    }`
+  );
 
+  const id = action.transaction
+    ? `${action.transaction.block_height}-${action.transaction.result.id}-${action.id}`
+    : `${action.receipt.block_height}-${action.receipt.id}-${action.id}`;
+  const sender = action.transaction
+    ? action.transaction.signer_id
+    : action.receipt.predecessor_id;
+  const receiver = action.transaction
+    ? action.transaction.receiver_id
+    : action.receipt.receiver_id;
 
   const actionRecord = NearActionEntity.create({
-    id: `${action.transaction.result.id}-${action.id}`,
-    sender: action.transaction.signer_id,
-    receiver: action.transaction.receiver_id,
+    id: id,
+    sender: sender,
+    receiver: receiver,
     amount: BigInt((action.action as Transfer).deposit.toString()),
   });
 
