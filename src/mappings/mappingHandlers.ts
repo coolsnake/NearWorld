@@ -23,6 +23,8 @@ export async function handleTransaction(
   transaction: NearTransaction
 ): Promise<void> {
   logger.info(`Handling transaction at ${transaction.block_height}`);
+  for( let i =0; i<transaction.result.receipt_ids.length; i++ )
+  	logger.info(`${transaction.result.receipt_ids[i]}\n`);
 
   const transactionRecord = NearTxEntity.create({
     id: `${transaction.block_hash}-${transaction.result.id}`,
